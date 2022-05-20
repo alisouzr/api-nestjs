@@ -32,7 +32,7 @@ export class TypeSongController {
     }
 
     @Put(':id')
-    update(@Param('id') id, @Body() typesong: UpdateTypeSongDto) {
+    update(@Param('id') id: number, @Body() typesong: UpdateTypeSongDto) {
         return this.typeSongService.update(id, typesong);
     }
 

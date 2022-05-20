@@ -1,20 +1,35 @@
-import { Controller, Get, Param } from "@nestjs/common";
-import { SingerService } from "./singer.service";
+import { Controller, Delete, Get, Param, Post, Put, Body } from '@nestjs/common';
+import { CreateSingerDto } from './dto/create-singer.dto';
+import { UpdateSingerDto } from './dto/update-singer.dto';
+import { SingerService } from './singer.service';
 
 @Controller('singer')
 export class SingerController {
     constructor(private singerService: SingerService) { }
 
-
-    //retornar todos os cantores
     @Get()
-    list() {
-        return this.singerService.listSinger();
+    async read() {
+        return this.singerService.list();
     }
 
-    //retornar cantores especificos
     @Get(":id")
-    getSinger(@Param('id') id: number) {
-        return this.singerService.getById(id);
+    async show(@Param("id") id: number) {
+        return this.singerService.get(id);
     }
+
+    @Post()
+    async create(@Body() body: CreateSingerDto) {
+        return this.singerService.create(body);
+    }
+
+    @Put(":id")
+    update(@Param("id") id: number, @Body() body: UpdateSingerDto) {
+        return this.singerService.update(id, body);
+    }
+
+    @Delete(":id")
+    delete(@Param("id") id: number) {
+        return this.singerService.delete(id);
+    }
+
 }

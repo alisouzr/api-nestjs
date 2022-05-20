@@ -74,4 +74,22 @@ export class TypeSongService {
 
         return id;
     }
+
+    async getById(id: number) {
+
+        id = Number(id);
+
+        const city = await this.db.typeSong.findUnique({
+            where: {
+                id,
+            },
+        });
+
+        if (!city) {
+            throw new NotFoundException("Tipo de música não encontrado.");
+        }
+
+        return city;
+
+    }
 }
