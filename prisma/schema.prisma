@@ -1,74 +1,75 @@
-datasource db {
-    provider = "mysql"
-    url      = env("DATABASE_URL")
+generator client {
+  provider = "prisma-client-js"
 }
 
-generator client {
-    provider = "prisma-client-js"
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
 }
 
 model TypeSong {
-    id       Int      @id @default(autoincrement())
-    typeSong String   @db.VarChar(127)
-    singer   Singer[]
-    user     User[]
+  id       Int      @id @default(autoincrement())
+  typeSong String   @db.VarChar(127)
+  singer   Singer[]
+  user     User[]
 
-    @@map("estilomusicais")
+  @@map("estilomusicais")
 }
 
 model Musica {
-    id         Int      @id @default(autoincrement())
-    name       String?  @db.VarChar(31)
-    singerId   Int
-    album      String?  @db.VarChar(31)
-    gravadora  String?  @db.VarChar(31)
-    lancamento DateTime @db.Date
-    singer     Singer   @relation(fields: [singerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_songs_singers")
-    User       User[]
+  id         Int      @id @default(autoincrement())
+  name       String?  @db.VarChar(31)
+  singerId   Int
+  album      String?  @db.VarChar(31)
+  gravadora  String?  @db.VarChar(31)
+  lancamento DateTime @db.Date
+  singer     Singer   @relation(fields: [singerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_songs_singers")
+  User       User[]
 
-    @@index([singerId], map: "FK_songs_singers")
-    @@map("musicas")
+  @@index([singerId], map: "FK_songs_singers")
+  @@map("musicas")
 }
 
 model Playlist {
-    id         Int    @id @default(autoincrement())
-    usersId    Int
-    name       String @db.VarChar(127)
-    typeSongId Int
-    qntSongs   Int
-    user       User   @relation(fields: [usersId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_playlist_user")
+  id         Int    @id @default(autoincrement())
+  usersId    Int
+  name       String @db.VarChar(127)
+  typeSongId Int
+  qntSongs   Int
+  user       User   @relation(fields: [usersId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_playlist_user")
 
-    @@index([usersId], map: "fk_playlist_user")
-    @@map("playlist")
+  @@index([usersId], map: "fk_playlist_user")
+  @@map("playlist")
 }
 
 model Singer {
-    id         Int      @id @default(autoincrement())
-    name       String   @db.VarChar(31)
-    firstAlbum String   @db.VarChar(31)
-    famousSong String   @db.VarChar(32)
-    typeSongID Int
-    typesong   TypeSong @relation(fields: [typeSongID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_singer_typesong")
-    Musica     Musica[]
+  id         Int      @id @default(autoincrement())
+  name       String   @db.VarChar(31)
+  firstAlbum String   @db.VarChar(31)
+  famousSong String   @db.VarChar(32)
+  typeSongID Int
+  typesong   TypeSong @relation(fields: [typeSongID], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_singer_typesong")
+  Musica     Musica[]
 
-    @@index([typeSongID], map: "fk_singer_typesong")
-    @@map("singers")
+  @@index([typeSongID], map: "fk_singer_typesong")
+  @@map("singers")
 }
 
 model User {
-    id                 Int        @id @default(autoincrement())
-    name               String     @db.VarChar(255)
-    nickname           String     @db.VarChar(31)
-    phone              String     @db.Char(13)
-    city               String     @db.VarChar(127)
-    idade              Int        @db.TinyInt
-    favoriteSongId     Int
-    favoriteTypeSongId Int
-    musica             Musica     @relation(fields: [favoriteSongId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_song")
-    typesong           TypeSong   @relation(fields: [favoriteTypeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_playlist_favoritetypesong")
-    Playlist           Playlist[]
+  id                 Int        @id @default(autoincrement())
+  name               String     @db.VarChar(255)
+  password           String     @db.VarChar(127)
+  nickname           String     @db.VarChar(31)
+  phone              String     @db.Char(13)
+  city               String     @db.VarChar(127)
+  idade              Int        @db.TinyInt
+  favoriteSongId     Int
+  favoriteTypeSongId Int
+  musica             Musica     @relation(fields: [favoriteSongId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_users_song")
+  typesong           TypeSong   @relation(fields: [favoriteTypeSongId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "fk_playlist_favoritetypesong")
+  Playlist           Playlist[]
 
-    @@index([favoriteTypeSongId], map: "fk_playlist_favoritetypesong")
-    @@index([favoriteSongId], map: "fk_users_song")
-    @@map("users")
+  @@index([favoriteTypeSongId], map: "fk_playlist_favoritetypesong")
+  @@index([favoriteSongId], map: "fk_users_song")
+  @@map("users")
 }

@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { DataBaseModule } from 'src/database/database.module';
-import { SongController } from './song.controller';
-import { SongService } from './song.service';
+import { UserModule } from 'src/user/user.module';
+import { AuthController } from './auth.controller';
+import { AuthService } from './auth.service';
 
 @Module({
-  controllers: [SongController],
-  providers: [SongService],
+  controllers: [AuthController],
+  providers: [AuthService],
   imports: [JwtModule.registerAsync({
     useFactory: () => ({
       secret: process.env.JWT_SECRET,
@@ -14,6 +14,6 @@ import { SongService } from './song.service';
         expiresIn: `${process.env.JWT_EXPIRES_IN}s`,
       },
     }),
-  }), DataBaseModule]
+  }), UserModule],
 })
-export class SongModule { }
+export class AuthModule { }

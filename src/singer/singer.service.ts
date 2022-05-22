@@ -21,7 +21,7 @@ export class SingerService {
         });
 
         if (!singer) {
-            throw new NotFoundException("Tipo de Música não existe.")
+            throw new NotFoundException("Cantor não existe.")
         }
 
         return singer;
