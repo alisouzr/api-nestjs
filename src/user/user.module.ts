@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { DataBaseModule } from 'src/database/database.module';
+import { TypeSongModule } from 'src/typeSong/typesong.module';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 

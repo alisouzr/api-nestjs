@@ -33,6 +33,18 @@ export class SongService {
     }
 
     async create({ name, singerId, album, gravadora, lancamento }: CreateSongDto) {
+
+        const singer = await this.db.typeSong.findUnique({
+            where: {
+                id: Number(singerId),
+            }
+        })
+
+        if (!singer) {
+            throw new NotFoundException("Cantor não encontrado.");
+        }
+
+
         return this.db.musica.create({
             data: {
                 name,
@@ -49,6 +61,16 @@ export class SongService {
     }
 
     async update(id: number, { name, singerId, album, gravadora, lancamento }: UpdateSongDto) {
+
+        const singer = await this.db.typeSong.findUnique({
+            where: {
+                id: Number(singerId),
+            }
+        })
+
+        if (!singer) {
+            throw new NotFoundException("Cantor não encontrado.");
+        }
 
         id = Number(id);
 

@@ -3,6 +3,7 @@ import { DataBaseService } from 'src/database/database.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from "bcrypt";
+import { TypeSongService } from 'src/typeSong/typesong.service';
 
 @Injectable()
 export class UserService {
@@ -38,7 +39,29 @@ export class UserService {
     }
 
     async create({ name, nickname, phone, city, idade, favoriteSongId, favoriteTypeSongId, password }: CreateUserDto) {
+
+        const favoriteSong = await this.db.musica.findUnique({
+            where: {
+                id: Number(favoriteSongId),
+            },
+        });
+
+        const favoriteTypeSong = await this.db.typeSong.findUnique({
+            where: {
+                id: Number(favoriteTypeSongId),
+            }
+        })
+
+        if (!favoriteSong) {
+            throw new NotFoundException("Música não encontrada.");
+        }
+
+        if (!favoriteTypeSong) {
+            throw new NotFoundException("Tipo de música não encontrada.");
+        }
+
         const salt = bcrypt.genSaltSync(10);
+
 
         return this.db.user.create({
             data: {
@@ -64,6 +87,26 @@ export class UserService {
     }
 
     async update(id: number, data: UpdateUserDto) {
+
+        const favoriteSong = await this.db.musica.findUnique({
+            where: {
+                id: Number(data.favoriteSongId),
+            },
+        });
+
+        const favoriteTypeSong = await this.db.typeSong.findUnique({
+            where: {
+                id: Number(data.favoriteTypeSongId),
+            }
+        })
+
+        if (!favoriteSong) {
+            throw new NotFoundException("Música não encontrada.");
+        }
+
+        if (!favoriteTypeSong) {
+            throw new NotFoundException("Tipo de música não encontrada.");
+        }
 
         return this.db.user.update({
             where: {
